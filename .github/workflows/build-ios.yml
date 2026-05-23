@@ -43,6 +43,10 @@ jobs:
             -destination generic/platform=iOS \
             -archivePath "build/${{ matrix.scheme }}.xcarchive" \
             -derivedDataPath build/DerivedData \
+            -allowProvisioningUpdates \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_STYLE=Automatic \
             -verbose \
             archive
 
@@ -53,6 +57,8 @@ jobs:
             -archivePath "build/${{ matrix.scheme }}.xcarchive" \
             -exportOptionsPlist ExportOptions.plist \
             -exportPath "build/ipa" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
             -verbose
 
       - name: Rename IPA
