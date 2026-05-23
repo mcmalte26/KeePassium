@@ -45,6 +45,7 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_ENTITLEMENTS="KeePassium/KeePassium-Debug.entitlements" \
             -verbose \
             archive
 
