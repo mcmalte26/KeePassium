@@ -48,20 +48,33 @@ jobs:
             -verbose \
             archive
 
-      - name: Export IPA for ${{ matrix.scheme }}
+      - name: Create unsigned IPA for ${{ matrix.scheme }}
         run: |
-          xcodebuild \
-            -exportArchive \
-            -archivePath "build/${{ matrix.scheme }}.xcarchive" \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath "build/ipa" \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            -verbose
-
-      - name: Rename IPA
-        run: |
-          mv "build/ipa/${{ matrix.scheme }}.ipa" "build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa" || true
+          set -e
+          # Extract app from archive
+          ARCHIVE="build/${{ matrix.scheme }}.xcarchive"
+          APP_BUNDLE="$ARCHIVE/Products/Applications"
+          APP_NAME="${{ matrix.scheme }}.app"
+          
+          # Find the app
+          if [ ! -d "$APP_BUNDLE/$APP_NAME" ]; then
+            echo "App bundle not found at $APP_BUNDLE/$APP_NAME"
+            ls -la "$APP_BUNDLE/" || echo "Directory doesn't exist"
+            exit 1
+          fi
+          
+          # Create IPA structure
+          IPA_STAGING=$(mktemp -d)
+          mkdir -p "$IPA_STAGING/Payload"
+          cp -r "$APP_BUNDLE/$APP_NAME" "$IPA_STAGING/Payload/"
+          
+          # Create unsigned IPA (just a zip file)
+          cd "$IPA_STAGING"
+          zip -r "build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa" Payload/
+          cd - > /dev/null
+          
+          echo "Created unsigned IPA: build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa"
+          ls -lh "build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa"
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
