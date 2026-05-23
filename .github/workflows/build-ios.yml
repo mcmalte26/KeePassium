@@ -39,6 +39,8 @@ jobs:
             -workspace KeePassium.xcworkspace \
             -scheme "${{ matrix.scheme }}" \
             -configuration "${{ matrix.configuration }}" \
+            -sdk iphoneos \
+            -destination generic/platform=iOS \
             -archivePath "build/${{ matrix.scheme }}.xcarchive" \
             -derivedDataPath build/DerivedData \
             -verbose \

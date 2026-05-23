@@ -4,15 +4,13 @@
 <dict>
 	<key>signingStyle</key>
 	<string>automatic</string>
-	<key>provisioningProfilesSpecifier</key>
-	<dict/>
 	<key>stripSwiftSymbols</key>
 	<true/>
-	<key>teamID</key>
-	<string>$(DEVELOPMENT_TEAM)</string>
 	<key>method</key>
 	<string>development</string>
 	<key>thinning</key>
 	<string>&lt;none&gt;</string>
+	<key>destination</key>
+	<string>generic</string>
 </dict>
 </plist>
