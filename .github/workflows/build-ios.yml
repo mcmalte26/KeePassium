@@ -1,0 +1,96 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  build:
+    name: Build and Export IPA
+    runs-on: macos-latest
+    
+    strategy:
+      matrix:
+        scheme:
+          - KeePassium
+          - KeePassium Pro
+          - KeePassium Org
+        configuration:
+          - Debug
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Display Xcode version
+        run: xcodebuild -version
+
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Archive ${{ matrix.scheme }}
+        run: |
+          xcodebuild \
+            -workspace KeePassium.xcworkspace \
+            -scheme "${{ matrix.scheme }}" \
+            -configuration "${{ matrix.configuration }}" \
+            -archivePath "build/${{ matrix.scheme }}.xcarchive" \
+            -derivedDataPath build/DerivedData \
+            -verbose \
+            archive
+
+      - name: Export IPA for ${{ matrix.scheme }}
+        run: |
+          xcodebuild \
+            -exportArchive \
+            -archivePath "build/${{ matrix.scheme }}.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath "build/ipa" \
+            -verbose
+
+      - name: Rename IPA
+        run: |
+          mv "build/ipa/${{ matrix.scheme }}.ipa" "build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa" || true
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.scheme }}-${{ matrix.configuration }}-ipa
+          path: build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa
+          if-no-files-found: warn
+
+      - name: Upload Archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.scheme }}-${{ matrix.configuration }}-xcarchive
+          path: build/${{ matrix.scheme }}.xcarchive
+          if-no-files-found: warn
+
+  test:
+    name: Run Tests
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Display Xcode version
+        run: xcodebuild -version
+
+      - name: Run Unit Tests
+        run: |
+          xcodebuild \
+            -workspace KeePassium.xcworkspace \
+            -scheme KeePassium \
+            -configuration Debug \
+            -derivedDataPath build \
+            -verbose \
+            test
