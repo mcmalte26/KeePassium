@@ -232,6 +232,8 @@ public class PremiumManager: NSObject {
     }
 
     private func updateStatus(allowSubscriptionExpiration: Bool) {
+        status = .subscribed
+        return
         if !allowSubscriptionExpiration && status == .subscribed {
             return
         }
