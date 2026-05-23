@@ -7,7 +7,7 @@
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>method</key>
-	<string>development</string>
+	<string>ad-hoc</string>
 	<key>thinning</key>
 	<string>&lt;none&gt;</string>
 	<key>destination</key>
