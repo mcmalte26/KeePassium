@@ -11,7 +11,7 @@
 	<key>thinning</key>
 	<string>&lt;none&gt;</string>
 	<key>destination</key>
-	<string>generic</string>
+	<string>export</string>
 	<key>provisioningProfilesSpecifier</key>
 	<dict/>
 	<key>teamID</key>
