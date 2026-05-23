@@ -97,6 +97,8 @@ jobs:
             -workspace KeePassium.xcworkspace \
             -scheme KeePassium \
             -configuration Debug \
+            -sdk iphonesimulator \
+            -destination generic/platform=iOS\ Simulator \
             -derivedDataPath build \
             -verbose \
             test

@@ -210,7 +210,7 @@ public class PremiumManager: NSObject {
         case freeHeavyUse
     }
 
-    public var status: Status = .initialGracePeriod
+    public var status: Status = .subscribed
 
     public static let statusUpdateNotification =
         Notification.Name("com.keepassium.premiumManager.statusUpdated")
