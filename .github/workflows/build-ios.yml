@@ -15,8 +15,6 @@ jobs:
       matrix:
         scheme:
           - KeePassium
-          - KeePassium Pro
-          - KeePassium Org
         configuration:
           - Debug
 
