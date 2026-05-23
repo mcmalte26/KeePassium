@@ -55,6 +55,7 @@ jobs:
           ARCHIVE="build/${{ matrix.scheme }}.xcarchive"
           APP_BUNDLE="$ARCHIVE/Products/Applications"
           APP_NAME="${{ matrix.scheme }}.app"
+          IPA_OUTPUT="$(pwd)/build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa"
           
           # Find the app
           if [ ! -d "$APP_BUNDLE/$APP_NAME" ]; then
@@ -70,8 +71,11 @@ jobs:
           
           # Create unsigned IPA (just a zip file)
           cd "$IPA_STAGING"
-          zip -r "build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa" Payload/
+          zip -r "$IPA_OUTPUT" Payload/
           cd - > /dev/null
+          
+          echo "Created unsigned IPA: $IPA_OUTPUT"
+          ls -lh "$IPA_OUTPUT"
           
           echo "Created unsigned IPA: build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa"
           ls -lh "build/${{ matrix.scheme }}-${{ matrix.configuration }}.ipa"
